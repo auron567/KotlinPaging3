@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">KotlinPaging3</string>
+
+    <string name="content_description_star">Star</string>
+    <string name="content_description_fork">Fork</string>
+    <string name="search">Search</string>
+    <string name="no_results">No results!</string>
+</resources>
