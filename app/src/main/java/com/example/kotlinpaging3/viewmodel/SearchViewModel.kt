@@ -1,18 +1,13 @@
 package com.example.kotlinpaging3.viewmodel
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.asLiveData
-import androidx.lifecycle.liveData
-import androidx.lifecycle.switchMap
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.example.kotlinpaging3.data.model.Repo
-import com.example.kotlinpaging3.data.model.Repos
-import com.example.kotlinpaging3.data.model.Result
 import com.example.kotlinpaging3.data.repository.GithubRepository
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.Flow
 
 /**
  * The [ViewModel] for fetching a list of [Repo].
@@ -22,39 +17,31 @@ class SearchViewModel @ViewModelInject constructor(
 ) : ViewModel() {
 
     /**
-     * The current text (repository) to search.
-     */
-    private val query = MutableLiveData<String>()
-
-    /**
      * A list of [Repo] that updates based on the current text.
      */
-    val repoResults: LiveData<Result<Repos>> = query.switchMap { text ->
-        liveData {
-            val repos = repository.getSearchResultsFlow(text).asLiveData()
-            emitSource(repos)
-        }
-    }
+    private var repoResults: Flow<PagingData<Repo>>? = null
 
     /**
-     * Search repositories based on [text].
+     * The current text (repository) to search.
      */
-    fun searchRepos(text: String) {
-        query.value = text
-    }
+    var currentQuery: String? = null
+        private set
 
     /**
-     * Trigger a new network request when the user scrolls to the end of the displayed list.
+     * Search repositories based on [query] string.
      */
-    fun listScrolled(totalItemCount: Int, visibleItemCount: Int, lastVisibleItem: Int) {
-        if (visibleItemCount + lastVisibleItem + VISIBLE_THRESHOLD >= totalItemCount) {
-            query.value?.let { text ->
-                viewModelScope.launch {
-                    repository.requestMore(text)
-                }
-            }
+    fun searchRepos(query: String): Flow<PagingData<Repo>> {
+        // New search query is the same as the current query
+        val lastResult = repoResults
+        if (currentQuery == query && lastResult != null) {
+            return lastResult
         }
+
+        // New search query is different
+        currentQuery = query
+        val newResult = repository.getSearchResultsFlow(query)
+            .cachedIn(viewModelScope)
+        repoResults = newResult
+        return newResult
     }
 }
-
-private const val VISIBLE_THRESHOLD = 5

@@ -51,9 +51,10 @@ dependencies {
     implementation(Libs.activityKtx)
     implementation(Libs.constraintlayout)
     implementation(Libs.recyclerview)
-    // ViewModel and LiveData
+    // ViewModel
     implementation(Libs.viewmodelKtx)
-    implementation(Libs.livedataKtx)
+    // Paging
+    implementation(Libs.paging)
     // Retrofit
     implementation(Libs.retrofit)
     implementation(Libs.retrofitConverterGson)
