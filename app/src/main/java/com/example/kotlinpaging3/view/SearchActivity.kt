@@ -53,7 +53,10 @@ class SearchActivity : AppCompatActivity() {
             addItemDecoration(divider)
 
             // Set adapter
-            adapter = repoAdapter
+            adapter = repoAdapter.withLoadStateHeaderAndFooter(
+                header = RepoLoadStateAdapter { repoAdapter.retry() },
+                footer = RepoLoadStateAdapter { repoAdapter.retry() }
+            )
         }
     }
 

@@ -51,6 +51,7 @@ dependencies {
     implementation(Libs.activityKtx)
     implementation(Libs.constraintlayout)
     implementation(Libs.recyclerview)
+    implementation(Libs.material)
     // ViewModel
     implementation(Libs.viewmodelKtx)
     // Paging

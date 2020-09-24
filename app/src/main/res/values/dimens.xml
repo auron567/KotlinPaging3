@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="dp_8">8dp</dimen>
+    
     <dimen name="repo_item_margin_horizontal">12dp</dimen>
     <dimen name="repo_item_margin_vertical">12dp</dimen>
     <dimen name="repo_text_size">16sp</dimen>
     <dimen name="no_data_text_size">16sp</dimen>
+    <dimen name="error_text_size">18sp</dimen>
 </resources>
