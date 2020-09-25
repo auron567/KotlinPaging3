@@ -5,10 +5,12 @@ import android.view.Menu
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.example.kotlinpaging3.R
+import com.example.kotlinpaging3.app.longToast
 import com.example.kotlinpaging3.databinding.ActivitySearchBinding
 import com.example.kotlinpaging3.viewmodel.SearchViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -34,6 +36,7 @@ class SearchActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setReposRecyclerView()
+        setRetryButton()
         initSearch()
     }
 
@@ -57,6 +60,34 @@ class SearchActivity : AppCompatActivity() {
                 header = RepoLoadStateAdapter { repoAdapter.retry() },
                 footer = RepoLoadStateAdapter { repoAdapter.retry() }
             )
+
+            // Set LoadStateListener
+            repoAdapter.addLoadStateListener { loadState ->
+                // Set views visibility
+                with(binding) {
+                    reposRecyclerView.isVisible = loadState.source.refresh is LoadState.NotLoading
+                    progressBar.isVisible = loadState.source.refresh is LoadState.Loading
+                    retryButton.isVisible = loadState.source.refresh is LoadState.Error
+                }
+
+                // Show a toast on error
+                val errorState = loadState.source.append as? LoadState.Error
+                    ?: loadState.source.prepend as? LoadState.Error
+                    ?: loadState.append as? LoadState.Error
+                    ?: loadState.prepend as? LoadState.Error
+                errorState?.let {
+                    longToast(it.error.localizedMessage)
+                }
+            }
+        }
+    }
+
+    /**
+     * Retry button configuration.
+     */
+    private fun setRetryButton() {
+        binding.retryButton.setOnClickListener {
+            repoAdapter.retry()
         }
     }
 
