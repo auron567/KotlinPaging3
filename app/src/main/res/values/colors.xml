@@ -5,4 +5,5 @@
     <color name="colorAccent">#FF4081</color>
 
     <color name="repo_name_color">#1F75FE</color>
+    <color name="separator_background">#AAAAAA</color>
 </resources>

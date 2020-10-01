@@ -10,6 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
 import com.example.kotlinpaging3.R
+import com.example.kotlinpaging3.adapter.RepoAdapter
+import com.example.kotlinpaging3.adapter.RepoLoadStateAdapter
 import com.example.kotlinpaging3.app.longToast
 import com.example.kotlinpaging3.databinding.ActivitySearchBinding
 import com.example.kotlinpaging3.viewmodel.SearchViewModel
